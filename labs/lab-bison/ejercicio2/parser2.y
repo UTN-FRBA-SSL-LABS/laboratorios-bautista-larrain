@@ -14,26 +14,29 @@ void yyerror(const char *msg) { fprintf(stderr, "Error: %s\n", msg); }
  */
 %union {
     int  int_val;
-    /* TODO 1 — Agregar un miembro para cadenas: char str_val[64]; */
+    char str_val[64];
 }
 
 /* Declaración de tokens con su tipo semántico */
 %token <int_val>  NUM             /* Ejemplo: NUM usa el miembro int_val */
-/* TODO 2 — Declarar IDENT con el tipo str_val: %token <str_val> IDENT  */
-
-/* TODO 3 — Declarar el tipo de la producción 'item': %type <int_val> item */
-/*          (cambiar int_val por el miembro adecuado una vez que agregues str_val) */
+%token <str_val> IDENT
+%type <int_val> item
 
 %%
 
 input:
     /* vacío */
-  | input item
+  | input linea
+  ;
+
+  linea:
+    '\n'
+  | item '\n'
   ;
 
 item:
-    NUM '\n'   { printf("Numero: %d\n", $1); }   /* Ejemplo: ya implementado */
-  | /* TODO 4 — Agregar regla para IDENT '\n' que imprima: "Identificador: <nombre>\n" */
+    NUM { printf("Numero: %d\n", $1); }   /* Ejemplo: ya implementado */
+  | IDENT { printf("Identificador: %s\n", $1); }
   ;
 
 %%
